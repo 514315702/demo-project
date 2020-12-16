@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.StudentMapper">
+
+    <resultMap id="baseResultMap" type="entity.Student">
+        <result column="student_number" property="studentNumber" />
+        <result column="student_name" property="studentName"/>
+        <result  column="student_birth" property="studentBirth"/>
+        <result  column="student_sex" property="studentSex"/>
+    </resultMap>
+
+    <select id="findList" resultMap="baseResultMap">
+            select * from student
+    </select>
+
+    <!--查询平均分大于80分的-->
+    <select id="findAvg" resultType="entity.Student">
+        select student_number AS studentNumber,avg(score) as score from achievement
+				group by student_number
+				having avg(score) > 80;
+    </select>
+
+    <!--查询所有课程成绩大于等于60分学生的学号、姓名-->
+    <select id="findScore" resultType="entity.Student" >
+        select distinct achievement.student_number as studentNumber, student.student_name  as studentName from achievement
+				join student on student.student_number = achievement.student_number
+				where achievement.score >= 60;
+    </select>
+
+
+    <!--查询出只选修了两门课程的全部学生的学号和姓名-->
+    <select id="findScoreSecond"  resultType="entity.Student">
+        select student_number as studentNumber ,student_name as  studentName from student
+						where student_number in (select student_number from achievement
+                         group by student_number
+                         having count(course_number) = 2);
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+

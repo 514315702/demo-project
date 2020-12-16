@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.AchievementMapper">
+
+    <resultMap id="baseResultMap" type="entity.Achievement">
+        <result column="student_number" property="studentNumber" />
+        <result column="course_number" property="courseNumber"/>
+        <result  column="score" property="score"/>
+    </resultMap>
+
+    <select id="findList" resultMap="baseResultMap">
+            select * from achievement
+    </select>
+
+    <!--查询各科成绩最高分和最低分-->
+    <select id="findMaxAndMin" resultType="entity.Achievement" >
+        select course_number AS courseNumber ,max(score) AS maxScore,min(score) AS minScore from achievement
+		group by course_number;
+    </select>
+
+
+
+</mapper>
+
+
+
+
+
+
+
+

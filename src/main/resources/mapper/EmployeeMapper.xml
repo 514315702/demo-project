@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.EmployeeMapper">
+
+
+    <select id="findList" resultType="entity.Employee">
+            select * from employee
+    </select>
+
+    <!--找出工资大于8000的用户和部门-->
+    <select id="wagesGreaterThan" resultType="entity.Employee" >
+        select ee.*,d.name as 'departmentName'  from test.employee  ee join  test.department d on d.id = ee.department_id
+              where ee.salary &gt; 8000;
+    </select>
+
+    <!--查询工资前3高的学生-->
+    <select id="wagesHighest" resultType="entity.Employee">
+        SELECT
+         d.Name AS 'departmentName', e1.Name AS 'name', e1.Salary
+        FROM
+            employee e1
+        JOIN department d ON e1.department_id = d.id
+        WHERE
+                3 > ( SELECT
+                        COUNT(DISTINCT e2.Salary)
+                    FROM employee e2
+                    WHERE
+                        e2.Salary > e1.Salary AND  e1.department_id = e2.department_id
+                    )
+        ORDER BY e1.department_id,e1.salary DESC;
+    </select>
+
+    <!--批量插入-->
+    <insert id="insertEmployees" parameterType="java.util.List">
+        insert into redeem_code
+            (name, salary, department_id)
+        VALUE
+           <foreach collection ="list" item="employee" index= "index" separator =",">
+             (#{employee.name}, #{employee.salary},#{employee.departmentId})
+           </foreach >
+
+    </insert>
+
+</mapper>
+
+
+
+
+
+
+
+
